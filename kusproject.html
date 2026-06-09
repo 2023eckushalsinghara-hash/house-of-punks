@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>HOUSE OF PUNKS — Bold. Original. Unapologetic.</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ink-black': '#010B13',
+            'bright-snow': '#F7F7F7',
+            'neon-rose': '#FF00CC',
+          },
+          fontFamily: {
+            heading: ['Bricolage Grotesque', 'sans-serif'],
+            body: ['Hanken Grotesk', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #010B13;
+      color: #F7F7F7;
+      font-family: 'Hanken Grotesk', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      text-transform: uppercase;
+      line-height: 0.85;
+    }
+    .marquee-track {
+      display: flex; white-space: nowrap;
+      animation: marquee-scroll 24s linear infinite;
+    }
+    .marquee-track-reverse {
+      display: flex; white-space: nowrap;
+      animation: marquee-scroll-reverse 24s linear infinite;
+    }
+    @keyframes marquee-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes marquee-scroll-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+    .blend-difference { mix-blend-mode: difference; }
+    .starburst-spin { animation: spin 30s linear infinite; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .collage-img {
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: grayscale(80%) brightness(0.7);
+    }
+    .collage-img:hover {
+      transform: scale(1.1) rotate(0deg) !important;
+      z-index: 50;
+      box-shadow: 0 40px 100px rgba(255, 0, 204, 0.3);
+      filter: grayscale(0%) brightness(1);
+    }
+    .eye-icon {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0; transform: scale(0.5);
+    }
+    .bento-cell:hover .eye-icon { opacity: 1; transform: scale(1); }
+    .logo-glow { text-shadow: 0 0 35px rgba(255, 0, 204, 0.8); }
+    .brutalist-border { border: 12px solid #FF00CC; }
+    .nav-scrolled {
+      background: rgba(1, 11, 19, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 0, 204, 0.2);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #010B13; }
+    ::-webkit-scrollbar-thumb { background: #FF00CC; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff40d6; }
+    .prod-img-front { transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .prod-img-back  { transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .prod-card-container:hover .prod-img-front { opacity: 0; transform: scale(1.05); }
+    .prod-card-container:hover .prod-img-back  { opacity: 1; transform: scale(1); }
+
+    /* Instagram gradient button */
+    .ig-shop-btn {
+      background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+      transition: opacity .25s, transform .25s, box-shadow .25s;
+    }
+    .ig-shop-btn:hover {
+      opacity: .9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(253,29,29,0.35);
+    }
+
+    /* floating pulse ring on hero IG badge */
+    .ig-pulse {
+      position: relative;
+    }
+    .ig-pulse::after {
+      content: '';
+      position: absolute; inset: -5px;
+      border-radius: 9999px;
+      border: 1.5px solid rgba(253,29,29,0.5);
+      animation: ig-ring 2s ease infinite;
+    }
+    @keyframes ig-ring {
+      0%  { transform: scale(1);   opacity: .7; }
+      70% { transform: scale(1.5); opacity: 0; }
+      100%{ transform: scale(1);   opacity: 0; }
+    }
+
+    .filter-btn.active {
+      border-color: #FF00CC !important;
+      color: #FF00CC !important;
+    }
+  </style>
+</head>
+<body class="relative">
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- LOADER -->
+  <div id="loader" class="fixed inset-0 bg-ink-black z-[10000] flex flex-col items-center justify-center transition-all duration-1000">
+    <div class="text-neon-rose font-bold tracking-[0.6em] text-xs uppercase mb-4 animate-pulse">Establishing Connection</div>
+    <h1 class="text-4xl md:text-7xl font-heading tracking-tighter text-white font-black">
+      HOUSE <span class="text-neon-rose">OF PUNKS</span>
+    </h1>
+    <div class="w-48 h-[2px] bg-white/10 mt-8 overflow-hidden rounded-full">
+      <div id="loader-bar" class="h-full bg-neon-rose w-0 transition-all duration-[2000ms] ease-out"></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-500">
+    <a href="#" class="font-heading font-black text-2xl md:text-3xl tracking-tighter text-white hover:text-neon-rose transition-colors">
+      HOP<span class="text-neon-rose">×</span>
+    </a>
+    
+    <div class="hidden md:flex gap-12 text-xs font-bold tracking-[0.4em] uppercase text-white/60">
+      <a href="#collections" class="hover:text-neon-rose hover:tracking-[0.45em] transition-all">Selection</a>
+      <a href="#lookbook"    class="hover:text-neon-rose hover:tracking-[0.45em] transition-all">Lookbook</a>
+      <a href="#ethos"       class="hover:text-neon-rose hover:tracking-[0.45em] transition-all">Ethos</a>
+      <a href="#cult"        class="hover:text-neon-rose hover:tracking-[0.45em] transition-all">Cult</a>
+    </div>
+
+    <!-- NAV SHOP NOW BUTTON -->
+    <a href="https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq"
+       target="_blank" rel="noopener"
+       class="ig-shop-btn flex items-center gap-2 px-5 py-2.5 text-[10px] font-black tracking-[0.3em] uppercase text-white rounded-sm">
+      <i class="ti ti-brand-instagram text-sm"></i>
+      SHOP NOW
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative h-screen w-full flex items-center overflow-hidden bg-ink-black">
+    <div class="absolute inset-0 z-0">
+      <video src="https://videos.pexels.com/video-files/8059346/8059346-hd_1920_1080_25fps.mp4"
+             poster="https://images.pexels.com/videos/8059346/pexels-photo-8059346.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=630&w=1200"
+             autoplay muted loop playsinline preload="metadata"
+             class="w-full h-full object-cover grayscale opacity-35 scale-105 filter contrast-125"></video>
+      <div class="absolute inset-0 bg-gradient-to-t from-ink-black via-transparent to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 w-full px-6 md:px-12 pointer-events-none select-none">
+      <h1 class="text-[13vw] font-black tracking-[-0.05em] blend-difference text-white leading-[0.8] font-heading">
+        HOUSE<br><span class="text-bright-snow">OF PUNKS</span>
+      </h1>
+    </div>
+
+    <!-- bottom-left discover -->
+    <div class="absolute bottom-16 left-6 md:left-12 z-20">
+      <a href="#collections" class="group flex flex-col gap-3 items-start">
+        <span class="text-[9px] tracking-[0.5em] text-white/50 font-bold uppercase">Begin Investigation</span>
+        <div class="flex items-center gap-4">
+          <span class="text-3xl md:text-5xl font-heading text-white group-hover:text-neon-rose transition-colors duration-300">DISCOVER</span>
+          <div class="w-16 h-[2px] bg-white/20 group-hover:w-32 group-hover:bg-neon-rose transition-all duration-500"></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- bottom-right Instagram shop badge -->
+    <div class="absolute bottom-16 right-6 md:right-12 z-20 flex flex-col items-center gap-3">
+      <a href="https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq"
+         target="_blank" rel="noopener"
+         class="ig-pulse ig-shop-btn w-14 h-14 rounded-full flex items-center justify-center shadow-xl">
+        <i class="ti ti-brand-instagram text-2xl text-white"></i>
+      </a>
+      <span class="text-[8px] tracking-[0.35em] text-white/40 uppercase font-bold">@houseofrare_09</span>
+    </div>
+
+    <!-- top-right label -->
+    <div class="absolute top-28 right-6 md:right-12 z-10 text-right">
+      <p class="text-neon-rose font-heading text-2xl md:text-3xl tracking-tighter italic">ISSUE 01</p>
+      <p class="text-white/40 text-[9px] tracking-[0.4em] uppercase mt-1">Summer Archive 2026</p>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="relative py-8 border-y-2 border-neon-rose/30 overflow-hidden bg-black/50 backdrop-blur-md">
+    <div class="marquee-track flex gap-12 py-1">
+      <div class="flex items-center gap-12 shrink-0">
+        <span class="text-5xl md:text-7xl font-heading text-neon-rose tracking-tighter">BOLD × ORIGINAL × UNAPOLOGETIC</span>
+        <span class="text-5xl md:text-7xl font-heading text-white/10 tracking-tighter">HOUSE OF PUNKS</span>
+      </div>
+      <div class="flex items-center gap-12 shrink-0">
+        <span class="text-5xl md:text-7xl font-heading text-neon-rose tracking-tighter">BOLD × ORIGINAL × UNAPOLOGETIC</span>
+        <span class="text-5xl md:text-7xl font-heading text-white/10 tracking-tighter">HOUSE OF PUNKS</span>
+      </div>
+    </div>
+    <div class="marquee-track marquee-track-reverse flex gap-12 py-1 mt-6">
+      <div class="flex items-center gap-12 shrink-0">
+        <span class="text-5xl md:text-7xl font-heading text-white/10 tracking-tighter font-black">WEAR YOUR IDENTITY</span>
+        <span class="text-5xl md:text-7xl font-heading text-neon-rose tracking-tighter">NEW DROPS 2026</span>
+      </div>
+      <div class="flex items-center gap-12 shrink-0">
+        <span class="text-5xl md:text-7xl font-heading text-white/10 tracking-tighter font-black">WEAR YOUR IDENTITY</span>
+        <span class="text-5xl md:text-7xl font-heading text-neon-rose tracking-tighter">NEW DROPS 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLLECTIONS -->
+  <section class="py-32 px-6 md:px-12 bg-ink-black" id="collections">
+    <div class="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
+      <div>
+        <span class="text-neon-rose font-bold tracking-[0.5em] text-[10px] uppercase mb-4 block">Archive 01 — Artifact Selection</span>
+        <h2 class="text-6xl md:text-9xl font-black text-bright-snow tracking-tighter font-heading">CURATED<br>OBJECTS</h2>
+      </div>
+      <div class="flex flex-wrap gap-2 max-w-xl justify-start md:justify-end">
+        <button class="filter-btn active px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('all',this)">All</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('bankai',this)">Bankai</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('music',this)">Music</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('never',this)">Never</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('artist',this)">Artist</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('speed',this)">Speed</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('sport',this)">Sport</button>
+        <button class="filter-btn px-4 py-2 border border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50 hover:border-neon-rose hover:text-neon-rose transition-all duration-300" onclick="filterCatalog('emotion',this)">Emotion</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="products-grid"></div>
+  </section>
+
+  <!-- LOOKBOOK -->
+  <section class="relative min-h-[1100px] py-24 w-full bg-ink-black overflow-hidden border-t border-white/5" id="lookbook">
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+      <span class="text-[30vw] font-black text-white/[0.01] tracking-tighter">01</span>
+    </div>
+    <div class="relative z-10 px-6 md:px-12 flex flex-col gap-2">
+      <h2 class="text-5xl md:text-7xl font-heading text-neon-rose tracking-[-0.05em] italic">EDITORIAL_LOOKS</h2>
+      <p class="text-[10px] text-bright-snow/40 uppercase tracking-[0.8em]">Visual Moodboard Archive</p>
+    </div>
+    <div class="absolute top-[15%] left-[5%] w-60 md:w-64 h-80 z-20">
+      <img src="spics/IMG-20260601-WA0023.jpg" class="collage-img w-full h-full object-contain bg-neutral-900/60 -rotate-12 border-[10px] border-white/5 rounded-xs" loading="lazy">
+      <p class="text-[9px] tracking-widest text-white/40 mt-2 uppercase text-center font-bold">Look 01 — AM Waveform</p>
+    </div>
+    <div class="absolute top-[12%] right-[8%] w-64 md:w-80 h-[480px] z-10">
+      <img src="spics/IMG-20260601-WA0013.jpg" class="collage-img w-full h-full object-contain bg-neutral-900/60 rotate-6 border-[12px] border-white/5 rounded-xs" loading="lazy">
+      <p class="text-[9px] tracking-widest text-white/40 mt-2 uppercase text-center font-bold">Look 02 — Bankai Theatre</p>
+    </div>
+    <div class="absolute top-[38%] left-[28%] w-72 md:w-[420px] h-[550px] z-30">
+      <img src="spics/IMG-20260601-WA0009.jpg" class="collage-img w-full h-full object-contain bg-neutral-900/60 -rotate-3 border-[15px] border-white/5 rounded-xs" loading="lazy">
+      <p class="text-[9px] tracking-widest text-white/40 mt-2 uppercase text-center font-bold">Look 03 — NEVER Forest Back</p>
+    </div>
+    <div class="absolute bottom-[8%] left-[4%] w-64 md:w-[320px] h-[420px] z-20">
+      <img src="spics/IMG-20260601-WA0000.jpg" class="collage-img w-full h-full object-contain bg-neutral-900/60 rotate-12 border-[10px] border-white/5 rounded-xs" loading="lazy">
+      <p class="text-[9px] tracking-widest text-white/40 mt-2 uppercase text-center font-bold">Look 04 — NEVER Vintage Flower</p>
+    </div>
+    <div class="absolute bottom-[10%] right-[10%] w-72 md:w-[380px] h-[480px] z-20">
+      <img src="spics/IMG-20260601-WA0001.jpg" class="collage-img w-full h-full object-contain bg-neutral-900/60 -rotate-8 border-[12px] border-white/5 rounded-xs" loading="lazy">
+      <p class="text-[9px] tracking-widest text-white/40 mt-2 uppercase text-center font-bold">Look 05 — NEVER Royal Violet</p>
+    </div>
+  </section>
+
+  <!-- ETHOS -->
+  <section class="min-h-screen w-full bg-ink-black flex items-center relative overflow-hidden px-6 md:px-16 py-24 border-t border-white/5" id="ethos">
+    <div class="absolute top-24 right-12 md:right-24 w-72 md:w-96 h-72 md:h-96 opacity-[0.03] starburst-spin pointer-events-none">
+      <img src="https://cdn.jsdelivr.net/npm/game-icons-transparent@latest/svgs/lorc/star-swirl.svg" class="w-full h-full invert">
+    </div>
+    <div class="max-w-4xl text-left">
+      <span class="text-neon-rose font-bold tracking-[0.8em] text-[10px] uppercase mb-10 block">THE ETHOS_V1</span>
+      <h2 class="text-5xl md:text-8xl font-black mb-10 leading-[0.85] tracking-tighter font-heading text-white">
+        NOT BORN TO FIT.<br>CRAFTED TO REBEL.
+      </h2>
+      <p class="text-lg md:text-2xl font-light leading-relaxed text-bright-snow/70 mb-14 max-w-3xl">
+        House of Punks is more than clothing. It is a statement — born from high fidelity manga design, street rebellion, and the unapologetic desire to stand out. Every wash, every screen print, and every curated collection is created for those who challenge expectations and express themselves without compromise.
+      </p>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div class="flex items-center gap-6">
+          <div class="w-16 h-16 rounded-full border-2 border-neon-rose flex items-center justify-center starburst-spin p-2">
+            <img src="https://cdn.jsdelivr.net/npm/game-icons-transparent@latest/svgs/lorc/bright-explosion.svg" class="w-8 h-8 invert">
+          </div>
+          <div class="flex flex-col">
+            <p class="text-[9px] tracking-[0.4em] font-bold text-neon-rose uppercase mb-1 italic">Status: Unapologetic</p>
+            <p class="text-xs tracking-[0.1em] text-white/40 uppercase font-semibold">Establishing Dominance in the Streetscape</p>
+          </div>
+        </div>
+        <!-- Ethos SHOP NOW -->
+        <a href="https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq"
+           target="_blank" rel="noopener"
+           class="ig-shop-btn flex items-center gap-2 px-7 py-3.5 text-xs font-black tracking-[0.3em] uppercase text-white rounded-sm">
+          <i class="ti ti-brand-instagram text-base"></i> SHOP ON INSTAGRAM
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-ink-black brutalist-border px-6 md:px-16 py-24 border-neon-rose" id="cult">
+    <div class="max-w-full">
+      <div class="mb-24">
+        <h2 class="text-[12vw] font-black tracking-tighter text-bright-snow leading-[0.8] mb-12 font-heading">
+          JOIN THE<br>CULT
+        </h2>
+        <form class="relative w-full border-b-4 border-bright-snow/20 pb-4 flex items-center gap-6 group focus-within:border-neon-rose transition-all duration-500"
+              onsubmit="event.preventDefault(); triggerSubscription();">
+          <input type="email" id="newsletter-email" required placeholder="ENTER THE VOID"
+                 class="w-full bg-transparent border-none outline-none text-2xl md:text-5xl font-heading text-bright-snow placeholder:text-bright-snow/30 uppercase tracking-tighter">
+          <button type="submit" class="text-neon-rose text-4xl md:text-6xl hover:scale-110 hover:text-white transition-all cursor-pointer">
+            <i class="ti ti-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 border-t border-white/5 pt-16">
+        <div class="flex flex-col gap-5">
+          <h4 class="text-neon-rose text-[10px] font-bold tracking-[0.5em] uppercase italic">Directory</h4>
+          <ul class="flex flex-col gap-3 text-xs font-semibold text-white/60 uppercase tracking-[0.25em]">
+            <li><a href="#collections" class="hover:text-neon-rose transition-colors">Selection</a></li>
+            <li><a href="#lookbook"    class="hover:text-neon-rose transition-colors">Lookbook</a></li>
+            <li><a href="#ethos"       class="hover:text-neon-rose transition-colors">Ethos</a></li>
+          </ul>
+        </div>
+        <div class="flex flex-col gap-5">
+          <h4 class="text-neon-rose text-[10px] font-bold tracking-[0.5em] uppercase italic">Frequency</h4>
+          <ul class="flex flex-col gap-3 text-xs font-semibold text-white/60 uppercase tracking-[0.25em]">
+            <li>
+              <a href="https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq"
+                 target="_blank" rel="noopener"
+                 class="hover:text-neon-rose transition-colors flex items-center gap-2">
+                <i class="ti ti-brand-instagram text-sm"></i> Instagram
+              </a>
+            </li>
+            <li><a href="#" class="hover:text-neon-rose transition-colors">TikTok</a></li>
+            <li><a href="#" class="hover:text-neon-rose transition-colors">X.Archive</a></li>
+          </ul>
+        </div>
+        <div class="flex flex-col gap-5">
+          <h4 class="text-neon-rose text-[10px] font-bold tracking-[0.5em] uppercase italic">Protocols</h4>
+          <ul class="flex flex-col gap-3 text-xs font-semibold text-white/60 uppercase tracking-[0.25em]">
+            <li><a href="#" class="hover:text-neon-rose transition-colors">Logistics</a></li>
+            <li><a href="#" class="hover:text-neon-rose transition-colors">Support</a></li>
+            <li><a href="#" class="hover:text-neon-rose transition-colors">Intel</a></li>
+          </ul>
+        </div>
+        <div class="flex flex-col items-start md:items-end justify-between gap-12">
+          <div class="text-left md:text-right">
+            <span class="text-5xl md:text-7xl font-black text-bright-snow tracking-tighter italic font-heading logo-glow">HOP×</span>
+          </div>
+          <div class="text-left md:text-right text-[9px] text-white/40 tracking-[0.4em] uppercase font-bold leading-relaxed">
+            <p class="mb-1">Designed for Rebels by Rebels.</p>
+            <p>© 2026 HOUSE OF PUNKS. ALL RIGHTS VOID.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRODUCT MODAL -->
+  <div id="product-modal" class="fixed inset-0 z-[5000] hidden items-center justify-center p-4 md:p-10 transition-all duration-500">
+    <div class="absolute inset-0 bg-ink-black/90 backdrop-blur-md" onclick="closeProductModal()"></div>
+    <div class="relative w-full max-w-4xl bg-neutral-950 border-2 border-neon-rose/30 shadow-[0_0_80px_rgba(255,0,204,0.15)] z-10 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+      <button onclick="closeProductModal()" class="absolute top-6 right-6 text-white/50 hover:text-neon-rose text-3xl transition-colors z-50">
+        <i class="ti ti-x"></i>
+      </button>
+      <!-- Left: image -->
+      <div class="relative bg-black/60 p-6 flex flex-col justify-between items-center border-r border-white/5 min-h-[400px] md:min-h-[600px]">
+        <div class="w-full h-[320px] md:h-[480px] flex items-center justify-center">
+          <img id="modal-main-image" src="" alt="" class="max-w-full max-h-full object-contain select-none">
+        </div>
+        <div class="flex gap-3 mt-4" id="modal-thumbnail-container"></div>
+      </div>
+      <!-- Right: details -->
+      <div class="p-8 md:p-12 flex flex-col justify-between">
+        <div>
+          <span id="modal-product-series" class="text-neon-rose font-bold tracking-[0.4em] text-[10px] uppercase block mb-3">Series</span>
+          <h3 id="modal-product-name" class="text-3xl md:text-4xl font-heading text-white font-black leading-tight mb-4">Garment Name</h3>
+          <p id="modal-product-tagline" class="text-xs tracking-[0.2em] uppercase font-bold text-white/40 mb-6">Tagline</p>
+          <p id="modal-product-desc" class="text-sm text-bright-snow/60 leading-relaxed font-light mb-8">Desc</p>
+          <div class="mb-8">
+            <div class="flex justify-between items-center text-[10px] tracking-[0.25em] font-bold text-white/40 uppercase mb-3">
+              <span>Select Dimension</span>
+              <a href="#" onclick="event.preventDefault(); alert('Spec: Standard Oversized Boxy Cut. Go true to size.');" class="text-neon-rose hover:underline">Sizing protocols</a>
+            </div>
+            <div class="flex gap-2">
+              <button class="size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all" onclick="selectDimension(this,'S')">S</button>
+              <button class="size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all" onclick="selectDimension(this,'M')">M</button>
+              <button class="size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all" onclick="selectDimension(this,'L')">L</button>
+              <button class="size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all" onclick="selectDimension(this,'XL')">XL</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <!-- PRIMARY: Buy Now → Instagram -->
+          <a href="https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq"
+             target="_blank" rel="noopener"
+             id="modal-buy-btn"
+             class="ig-shop-btn w-full flex items-center justify-center gap-2 text-xs font-black tracking-[0.3em] uppercase py-4 text-white rounded-sm">
+            <i class="ti ti-brand-instagram text-base"></i> BUY NOW
+          </a>
+          <!-- Secondary: request -->
+          <button onclick="requestArtifactAccess()"
+                  class="w-full border border-neon-rose/30 text-white/50 hover:text-white hover:border-neon-rose text-xs font-bold tracking-[0.3em] uppercase py-3 transition-all duration-300">
+            REQUEST SPECIMEN ACCESS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const INSTA_URL = "https://www.instagram.com/houseofrare_09?igsh=dGEzczBkaG1xa2pq";
+
+    const products = [
+      { id:"bankai-black",  name:"Bankai Theatre Suicide Black",    series:"Bankai Series",    category:"bankai",  tagline:"Bleach × Anime Culture",   desc:"Crafted from heavy duty 240GSM combed cotton, this black tee features a premium red-box typography design on the chest and an intricate Theatre Suicide manga panel collage on the back. Double stitched sleeve hem and high fidelity screen prints.", frontImg:"spics/IMG-20260601-WA0016.jpg", backImg:"spics/IMG-20260601-WA0013.jpg" },
+      { id:"bankai-white",  name:"Bankai Theatre Suicide White",    series:"Bankai Series",    category:"bankai",  tagline:"Bleach × Anime Culture",   desc:"A clean high-contrast option in pure alabaster white. Bold 'BLEACH Thousand-Year Blood War' branding printed on the front, with the signature Theatre Suicide back graphics in dark contrast print. Perfect streetwear drape.", frontImg:"spics/IMG-20260601-WA0019.jpg", backImg:"spics/IMG-20260601-WA0012.jpg" },
+      { id:"am-orange",     name:"Arctic Monkeys Orange",           series:"Music Series",     category:"music",   tagline:"Arctic Monkeys Tribute",   desc:"Bold bright orange cotton wash base featuring the signature AM waveforms on the front chest and a complete visual graphic design block on the back. True boxy drop-shoulder fit.", frontImg:"spics/IMG-20260601-WA0024.jpg", backImg:"spics/IMG-20260601-WA0023.jpg" },
+      { id:"am-blue",       name:"Arctic Monkeys Blue",             series:"Music Series",     category:"music",   tagline:"Arctic Monkeys Tribute",   desc:"Deep electric blue hue with a customized visual waveform typography graphic back statement and a minimalist text front. Preshrunk boxy crop look.", frontImg:"spics/IMG-20260601-WA0021.jpg", backImg:"spics/IMG-20260601-WA0022.jpg" },
+      { id:"never-green",   name:"NEVER Vintage Forest Green",      series:"NEVER Collection", category:"never",   tagline:"Everyday Rebels Cut",      desc:"Beautifully washed forest green vintage cotton with custom chest design patches and a prominent white spray-paint 'NEVER' lettering graphic across the back panel. Heavy vintage fade feel.", frontImg:"spics/IMG-20260601-WA0025.jpg", backImg:"spics/IMG-20260601-WA0009.jpg" },
+      { id:"never-brown",   name:"NEVER Vintage Brown (Flower)",    series:"NEVER Collection", category:"never",   tagline:"Everyday Rebels Cut",      desc:"Rich earth tone brown colorway. Front features a minimalist distressed patch, while the back panel displays a breathtaking large white vintage mandala border with a vibrant red rose emblem in the center.", frontImg:"spics/IMG-20260601-WA0006.jpg", backImg:"spics/IMG-20260601-WA0000.jpg" },
+      { id:"never-purple",  name:"NEVER Vintage Purple (Mandala)",  series:"NEVER Collection", category:"never",   tagline:"Everyday Rebels Cut",      desc:"A bold royal purple wash. Distress detailing on seams, clean tag prints, and a grand white mandala artwork printed on the back panel. Relaxed oversized look.", frontImg:"spics/IMG-20260601-WA0004.jpg", backImg:"spics/IMG-20260601-WA0001.jpg" },
+      { id:"never-am-green",name:"NEVER Green AM Hybrid",           series:"NEVER Collection", category:"never",   tagline:"Hybrid Street Cut",        desc:"Custom vintage washed military green. Printed with classic Harajuku graphics on the chest and an artistic sword-cross emblem across the back panels.", frontImg:"spics/IMG-20260601-WA0007.jpg", backImg:"spics/IMG-20260601-WA0008.jpg" },
+      { id:"xo-yellow",     name:"XO Weeknd Electric Yellow",       series:"Artist Series",    category:"artist",  tagline:"The Weeknd Tribute",       desc:"Vibrant electric mustard yellow base featuring classic minimalist 'XO' details on the chest and an artistic graphic design layout on the back panels.", frontImg:"spics/IMG-20260601-WA0027.jpg", backImg:"spics/IMG-20260601-WA0028.jpg" },
+      { id:"pagani-red",    name:"Pagani Huayra Roadster Red",      series:"Speed Series",     category:"speed",   tagline:"Pagani Supercar Tribute",  desc:"Aggressive speedway red combed cotton. High quality Pagani signature script printed on the front, with a gorgeous detailed Huayra Roadster blueprint graphic on the back.", frontImg:"spics/IMG-20260601-WA0002.jpg", backImg:"spics/IMG-20260601-WA0003.jpg" },
+      { id:"cap-america",   name:"Captain America Distressed Black",series:"Sport Edition",    category:"sport",   tagline:"Star-Spangled Defiance",   desc:"Deep coal black tee featuring the classic Captain America shield graphic inside a distressed star emblem on the back panels. High contrast retro feel.", frontImg:"spics/IMG-20260601-WA0018.jpg", backImg:"spics/IMG-20260601-WA0017.jpg" },
+      { id:"save-tears",    name:"Save Your Tears Alabaster White", series:"Emotion Series",   category:"emotion", tagline:"Save Your Tears Tribute",  desc:"Aesthetic heavy cotton tee. High fidelity red text print on the chest, with Weeknd character graphics and customized design tags printed across the back.", frontImg:"spics/IMG-20260601-WA0020.jpg", backImg:"spics/IMG-20260601-WA0011.jpg" }
+    ];
+
+    let selectedSize = 'M';
+    let activeProduct = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('loader-bar').style.width = '100%';
+        setTimeout(() => {
+          const loader = document.getElementById('loader');
+          loader.classList.add('opacity-0', 'pointer-events-none');
+        }, 1200);
+      }, 300);
+
+      window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 80) {
+          navbar.classList.add('nav-scrolled','py-4');
+          navbar.classList.remove('py-5');
+        } else {
+          navbar.classList.remove('nav-scrolled','py-4');
+          navbar.classList.add('py-5');
+        }
+      });
+
+      renderProducts('all');
+    });
+
+    function filterCatalog(category, btnElement) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      renderProducts(category);
+    }
+
+    function renderProducts(category) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '';
+      const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+      filtered.forEach((p, idx) => {
+        const isFeatured = idx % 4 === 0;
+        const colSpan = isFeatured ? 'md:col-span-2' : 'md:col-span-1';
+        const card = document.createElement('div');
+        card.className = `${colSpan} group bento-cell bg-neutral-950 border border-white/5 overflow-hidden relative cursor-pointer prod-card-container`;
+        card.setAttribute('onclick', `openProductModal('${p.id}')`);
+        card.innerHTML = `
+          <div class="relative h-[380px] md:h-[480px] flex items-center justify-center p-8 bg-neutral-900/40">
+            <img src="${p.frontImg}" alt="${p.name} front" class="prod-img-front absolute inset-0 w-full h-full object-contain p-6 grayscale group-hover:grayscale-0 z-10">
+            <img src="${p.backImg||p.frontImg}" alt="${p.name} back" class="prod-img-back absolute inset-0 w-full h-full object-contain p-6 opacity-0 scale-95 group-hover:opacity-100 z-10">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 flex items-center justify-center pointer-events-none">
+              <div class="eye-icon w-20 h-20 rounded-full bg-neon-rose flex items-center justify-center text-ink-black shadow-[0_0_30px_rgba(255,0,204,0.4)]">
+                <i class="ti ti-eye text-3xl"></i>
+              </div>
+            </div>
+            <div class="absolute top-6 left-6 z-30">
+              <span class="px-2 py-1 text-[8px] font-black tracking-[0.2em] bg-neon-rose text-ink-black uppercase">SPECIMEN</span>
+            </div>
+          </div>
+          <div class="p-6 bg-neutral-950/80 border-t border-white/5 relative z-30">
+            <p class="text-[8px] tracking-[0.4em] text-white/40 uppercase mb-1 font-bold">${p.series}</p>
+            <h3 class="text-lg font-heading text-white group-hover:text-neon-rose transition-colors duration-300">${p.name}</h3>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openProductModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      activeProduct = p;
+      selectedSize = 'M';
+
+      document.getElementById('modal-product-series').textContent  = p.series;
+      document.getElementById('modal-product-name').textContent    = p.name;
+      document.getElementById('modal-product-tagline').textContent = p.tagline;
+      document.getElementById('modal-product-desc').textContent    = p.desc;
+
+      const mainImg = document.getElementById('modal-main-image');
+      mainImg.src = p.frontImg;
+      mainImg.alt = p.name;
+
+      const thumbs = document.getElementById('modal-thumbnail-container');
+      thumbs.innerHTML = '';
+      [{ label:'FRONT', url:p.frontImg },{ label:'BACK', url:p.backImg||p.frontImg }].forEach((s, i) => {
+        const btn = document.createElement('button');
+        btn.className = i === 0
+          ? 'px-4 py-1.5 text-[9px] font-black tracking-widest border bg-neon-rose text-ink-black border-neon-rose transition-all uppercase'
+          : 'px-4 py-1.5 text-[9px] font-black tracking-widest border border-white/10 text-white/60 hover:border-white transition-all uppercase';
+        btn.textContent = s.label;
+        btn.onclick = () => {
+          mainImg.src = s.url;
+          thumbs.querySelectorAll('button').forEach(b => {
+            b.className = 'px-4 py-1.5 text-[9px] font-black tracking-widest border border-white/10 text-white/60 hover:border-white transition-all uppercase';
+          });
+          btn.className = 'px-4 py-1.5 text-[9px] font-black tracking-widest border bg-neon-rose text-ink-black border-neon-rose transition-all uppercase';
+        };
+        thumbs.appendChild(btn);
+      });
+
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.className = 'size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all text-white/70';
+        if (btn.textContent === 'M') {
+          btn.className = 'size-btn px-5 py-3 border border-neon-rose bg-neon-rose text-ink-black text-xs font-bold transition-all';
+        }
+      });
+
+      document.getElementById('product-modal').classList.remove('hidden');
+      document.getElementById('product-modal').classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+      document.getElementById('product-modal').classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function selectDimension(el, size) {
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.className = 'size-btn px-5 py-3 border border-white/10 text-xs font-bold hover:border-neon-rose hover:text-neon-rose transition-all text-white/70';
+      });
+      el.className = 'size-btn px-5 py-3 border border-neon-rose bg-neon-rose text-ink-black text-xs font-bold transition-all';
+      selectedSize = size;
+    }
+
+    function requestArtifactAccess() {
+      if (!activeProduct) return;
+      showNotification(`Redirecting to shop for ${activeProduct.name} [Size ${selectedSize}]`);
+      closeProductModal();
+      setTimeout(() => window.open(INSTA_URL, '_blank'), 500);
+    }
+
+    function triggerSubscription() {
+      const el = document.getElementById('newsletter-email');
+      showNotification(`VOID PROTOCOLS INITIATED FOR ${el.value.toUpperCase()}`);
+      el.value = '';
+    }
+
+    function showNotification(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = "bg-neutral-950 border-2 border-neon-rose p-5 shadow-[0_0_30px_rgba(255,0,204,0.3)] pointer-events-auto transition-all duration-500 transform translate-y-4 opacity-0 flex items-start gap-4";
+      toast.innerHTML = `
+        <div class="text-neon-rose text-xl shrink-0"><i class="ti ti-activity"></i></div>
+        <div class="flex-1">
+          <p class="text-[9px] tracking-[0.4em] uppercase text-neon-rose font-bold mb-1">SYSTEM NOTIFICATION</p>
+          <p class="text-xs font-semibold uppercase text-white/90 leading-normal tracking-wide">${message}</p>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => { toast.classList.replace('translate-y-4','translate-y-0'); toast.classList.replace('opacity-0','opacity-100'); }, 50);
+      setTimeout(() => {
+        toast.classList.replace('translate-y-0','translate-y-4'); toast.classList.replace('opacity-100','opacity-0');
+        setTimeout(() => toast.remove(), 500);
+      }, 5000);
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProductModal(); });
+  </script>
+</body>
+</html>
